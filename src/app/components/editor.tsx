@@ -5,8 +5,8 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { editor } from 'monaco-editor';
 import { useRouter } from 'next/navigation';
-import { Select } from './select';
 import { Editor as MonacoEditor } from '@monaco-editor/react';
+import { Select } from './select';
 import { ThemeSelect } from './theme-select';
 import { Button } from './button';
 
