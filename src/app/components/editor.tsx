@@ -48,7 +48,7 @@ export function Editor(props: Props) {
         }),
       });
 
-      //router.push((await response.json()).id);
+      router.push((await response.json()).id);
     });
   }
 
