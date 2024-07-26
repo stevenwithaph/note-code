@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useRef, useState, useTransition } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { editor } from 'monaco-editor';
@@ -9,6 +9,7 @@ import { Editor as MonacoEditor } from '@monaco-editor/react';
 import { Select } from './select';
 import { ThemeSelect } from './theme-select';
 import { Button } from './button';
+import { Spinner } from './spinner';
 
 interface Props {
   value: string;
@@ -21,7 +22,7 @@ export function Editor(props: Props) {
   const { theme } = useTheme();
   const router = useRouter();
 
-  const isPending = useRef(false);
+  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
@@ -31,24 +32,24 @@ export function Editor(props: Props) {
   async function handleCreate(e: FormEvent) {
     e.preventDefault();
 
-    if (isPending.current) {
+    if (isPending) {
       return;
     }
 
-    isPending.current = true;
+    startTransition(async () => {
+      //  TODO: handle empty values
+      const value = editorRef.current?.getValue();
 
-    //  TODO: handle empty values
-    const value = editorRef.current?.getValue();
+      const response = await fetch('/api/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          language: language,
+          snippet: value !== '' ? value : ' ',
+        }),
+      });
 
-    const response = await fetch('/api/create', {
-      method: 'POST',
-      body: JSON.stringify({
-        language: language,
-        snippet: value !== '' ? value : ' ',
-      }),
+      //router.push((await response.json()).id);
     });
-
-    router.push((await response.json()).id);
   }
 
   return (
@@ -61,19 +62,20 @@ export function Editor(props: Props) {
             defaultValue={props.value}
             language={language}
             onMount={handleEditorDidMount}
+            loading={<Spinner />}
             options={{
               minimap: { enabled: false },
-              readOnly: props.readOnly || isPending.current,
-              domReadOnly: props.readOnly || isPending.current,
+              readOnly: props.readOnly || isPending,
+              domReadOnly: props.readOnly || isPending,
             }}
           />
         </div>
       </div>
-      <div className="flex flex-row justify-between px-6 py-1">
+      <div className="flex flex-row justify-between items-center px-6 h-11">
         <div className="space-x-4">
           <ThemeSelect />
           <Select
-            disabled={props.readOnly}
+            disabled={props.readOnly || isPending}
             value={language}
             onChange={setLanguage}
           >
@@ -87,7 +89,10 @@ export function Editor(props: Props) {
         </div>
         {!props.readOnly && (
           <form onSubmit={handleCreate}>
-            <Button>Create</Button>
+            <Button>
+              {!isPending && <span>Create</span>}
+              {isPending && <Spinner />}
+            </Button>
           </form>
         )}
         {props.readOnly && (
