@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply text-slate-800 bg-slate-300 dark:text-zinc-300 dark:bg-zinc-800 px-2 py-1 rounded disabled:bg-light disabled:dark:bg-dark disabled:text-slate-800 disabled:dark:text-zinc-300 disabled:appearance-none disabled:opacity-100;
+  }
+}
