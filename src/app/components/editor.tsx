@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { editor } from 'monaco-editor';
 import { useRouter } from 'next/navigation';
-import { Editor as MonacoEditor } from '@monaco-editor/react';
+import { Monaco, Editor as MonacoEditor } from '@monaco-editor/react';
 import { Select } from './select';
 import { ThemeSelect } from './theme-select';
 import { Button } from './button';
@@ -48,7 +48,13 @@ export function Editor(props: Props) {
         }),
       });
 
-      router.push((await response.json()).id);
+      const json = await response.json();
+
+      if (json.success) {
+        router.push(json.id);
+      } else {
+        //  TODO: some kind of toast goes here
+      }
     });
   }
 

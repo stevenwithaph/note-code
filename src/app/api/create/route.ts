@@ -8,7 +8,9 @@ export async function POST(request: Request) {
   const snippet = json.snippet;
 
   if (!language || !snippet) {
-    return;
+    return Response.json({
+      success: false,
+    });
   }
 
   const buffer = Buffer.from(snippet.valueOf() as string);
@@ -21,6 +23,7 @@ export async function POST(request: Request) {
   });
 
   return Response.json({
+    success: true,
     id: note.id,
   });
 }
