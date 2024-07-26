@@ -21,6 +21,7 @@ export function Editor(props: Props) {
   const { theme } = useTheme();
   const router = useRouter();
 
+  const isPending = useRef(false);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
@@ -30,11 +31,20 @@ export function Editor(props: Props) {
   async function handleCreate(e: FormEvent) {
     e.preventDefault();
 
+    if (isPending.current) {
+      return;
+    }
+
+    isPending.current = true;
+
+    //  TODO: handle empty values
+    const value = editorRef.current?.getValue();
+
     const response = await fetch('/api/create', {
       method: 'POST',
       body: JSON.stringify({
         language: language,
-        snippet: editorRef.current?.getValue(),
+        snippet: value !== '' ? value : ' ',
       }),
     });
 
@@ -53,8 +63,8 @@ export function Editor(props: Props) {
             onMount={handleEditorDidMount}
             options={{
               minimap: { enabled: false },
-              readOnly: props.readOnly,
-              domReadOnly: props.readOnly,
+              readOnly: props.readOnly || isPending.current,
+              domReadOnly: props.readOnly || isPending.current,
             }}
           />
         </div>
