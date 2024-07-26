@@ -13,12 +13,12 @@ import { Spinner } from './spinner';
 
 interface Props {
   value: string;
-  language: string;
+  defaultLanguage: string;
   readOnly: boolean;
 }
 
 export function Editor(props: Props) {
-  const [language, setLanguage] = useState(props.language);
+  const [language, setLanguage] = useState(props.defaultLanguage);
   const { theme } = useTheme();
   const router = useRouter();
 

@@ -28,9 +28,13 @@ export default async function Page({ params }: Params) {
   }
 
   const value = snippet?.snippet.toString() || '';
-  const language = snippet?.language || 'HTML';
+  const language = snippet?.language || 'html';
 
   return (
-    <Editor value={value} language={language} readOnly={snippet !== null} />
+    <Editor
+      value={value}
+      defaultLanguage={language}
+      readOnly={snippet !== null}
+    />
   );
 }
