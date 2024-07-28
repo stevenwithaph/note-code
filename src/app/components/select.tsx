@@ -9,7 +9,7 @@ interface Props {
 export function Select(props: PropsWithChildren<Props>) {
   return (
     <select
-      className="btn"
+      className="btn cursor-pointer disabled:cursor-auto"
       disabled={props.disabled}
       value={props.value}
       onChange={(e) => props.onChange(e.target.value)}

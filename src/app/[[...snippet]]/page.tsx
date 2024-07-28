@@ -31,10 +31,14 @@ export default async function Page({ params }: Params) {
   const language = snippet?.language || 'html';
 
   return (
-    <Editor
-      value={value}
-      defaultLanguage={language}
-      readOnly={snippet !== null}
-    />
+    <main className="py-4 h-dvh">
+      <div className="max-w-[1536px] h-full m-auto bg-light dark:bg-dark py-6 rounded-xl flex flex-col">
+        <Editor
+          value={value}
+          defaultLanguage={language}
+          readOnly={snippet !== null}
+        />
+      </div>
+    </main>
   );
 }

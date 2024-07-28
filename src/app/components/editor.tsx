@@ -59,7 +59,7 @@ export function Editor(props: Props) {
   }
 
   return (
-    <div className="max-w-[1536px] h-dvh m-auto bg-light dark:bg-dark py-6 rounded-xl flex flex-col">
+    <>
       <div className="flex-1 relative">
         <div className="absolute inset-0 h-full">
           <MonacoEditor
@@ -107,6 +107,6 @@ export function Editor(props: Props) {
           </Link>
         )}
       </div>
-    </div>
+    </>
   );
 }
